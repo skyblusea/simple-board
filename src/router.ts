@@ -1,6 +1,8 @@
-import { HomePage } from "@/pages/home";
 import { createBrowserRouter } from "react-router";
-import { RootLayout } from "./components/layout/RootLayout";
+
+import { RootLayout } from "@/components/layout/RootLayout";
+import { LoginPage } from "@/pages/auth/LoginPage";
+import { HomePage } from "@/pages/home";
 
 export const routes = createBrowserRouter([
   {
@@ -10,6 +12,10 @@ export const routes = createBrowserRouter([
       {
         index: true,
         Component: HomePage,
+      },
+      {
+        path: "/login",
+        Component: LoginPage,
       },
     ],
   },
