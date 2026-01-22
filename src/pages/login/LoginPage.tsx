@@ -4,24 +4,48 @@ import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 export function LoginPage() {
+  const handleInvalid = (e: React.FormEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    if (input.validity.patternMismatch) {
+      input.setCustomValidity("비밀번호는 영문, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const data = Object.fromEntries(formData);
+  };
+
   return (
     <div className="flex flex-1 items-center justify-center p-4">
       <Card className="w-full max-w-md">
-        <form>
+        <form onSubmit={handleSubmit}>
           <CardContent>
             <FieldGroup>
               <FieldSet>
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="username">이메일 아이디</FieldLabel>
-                    <Input id="username" placeholder="이메일 아이디를 입력해주세요." required />
+                    <Input
+                      id="username"
+                      name="username"
+                      type="email"
+                      placeholder="이메일 아이디를 입력해주세요."
+                      required
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="password">비밀번호</FieldLabel>
                     <Input
                       id="password"
-                      placeholder="비밀번호를 입력해주세요."
+                      name="password"
                       type="password"
+                      pattern="^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!%*#?&]).+$"
+                      minLength={8}
+                      placeholder="비밀번호를 입력해주세요."
+                      onInvalid={handleInvalid}
+                      onInput={(e) => e.currentTarget.setCustomValidity("")}
                       required
                     />
                   </Field>
