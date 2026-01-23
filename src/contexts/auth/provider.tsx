@@ -1,5 +1,9 @@
 import { type PropsWithChildren, useState } from "react";
 
+import { jwtDecode } from "jwt-decode";
+
+import { authService } from "@/services/auth";
+import type { SigninRequest, SignupRequest } from "@/services/auth/types";
 import type { User } from "@/types/user";
 
 import { AuthContext } from "./context";
@@ -7,14 +11,22 @@ import { AuthContext } from "./context";
 export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = (user: User | null) => {
-    setUser(user);
+  const signin = async (data: SigninRequest) => {
+    const response = await authService.signin(data);
+    const decoded = jwtDecode<User>(response.accessToken);
+    setUser({
+      username: decoded.username,
+      name: decoded.name,
+    });
   };
 
-  const logout = () => {};
+  const logout = () => {
+    authService.logout();
+    setUser(null);
+  };
 
-  const signup = (user: User | null) => {
-    setUser(user);
+  const signup = async (data: SignupRequest) => {
+    await authService.signup(data);
   };
 
   return (
@@ -22,7 +34,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       value={{
         user,
         isAuthenticated: !!user,
-        login,
+        signin,
         logout,
         signup,
       }}
