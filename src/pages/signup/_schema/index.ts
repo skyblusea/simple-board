@@ -10,12 +10,12 @@ export const signupSchema = z
         /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!%*#?&])/,
         "영문, 숫자, 특수문자(!%*#?&)를 포함해야 합니다.",
       ),
-    passwordConfirm: z.string().min(1, "비밀번호 확인을 입력해주세요."),
+    confirmPassword: z.string().min(1, "비밀번호 확인을 입력해주세요."),
     name: z.string().min(1, "이름을 입력해주세요."),
   })
-  .refine((data) => data.password === data.passwordConfirm, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "비밀번호가 일치하지 않습니다.",
-    path: ["passwordConfirm"],
+    path: ["confirmPassword"],
   });
 
 export type SignupFormData = z.infer<typeof signupSchema>;
