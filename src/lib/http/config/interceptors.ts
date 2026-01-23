@@ -1,4 +1,9 @@
-import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
+
+import { REFRESH_TOKEN_KEY } from "@/constants/auth";
+import { getAccessToken, setAccessToken } from "@/lib/tokenStorage";
+import { AUTH_API_URL } from "@/services/auth";
 
 import { headerConfigs } from "./headers";
 
@@ -8,9 +13,13 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   // Request
   axiosInstance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
+      const token = getAccessToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
       return config;
     },
-    (error: AxiosError) => Promise.reject(error),
+    (error) => Promise.reject(error),
   );
 
   // Response
@@ -18,7 +27,30 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
     (response: AxiosResponse) => {
       return response;
     },
-    async (error: AxiosError) => {
+    async (error) => {
+      const originalRequest = error.config;
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+        try {
+          const { data } = await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/${AUTH_API_URL.refresh}`,
+            {
+              refreshToken,
+            },
+          );
+          setAccessToken(data.accessToken);
+          originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+          return axiosInstance(originalRequest);
+        } catch (refreshError) {
+          setAccessToken(null);
+          localStorage.removeItem(REFRESH_TOKEN_KEY);
+          window.location.href = "/login";
+          return Promise.reject(refreshError);
+        }
+      } else {
+        setAccessToken(null);
+        window.location.href = "/login";
+      }
       return Promise.reject(error);
     },
   );
