@@ -1,0 +1,26 @@
+import type { PageResponse } from "@/types/page";
+
+export type CategoriesResponse = Record<string, string>;
+
+export interface PostListItem {
+  id: number;
+  title: string;
+  category: string;
+  createdAt: string;
+}
+
+export interface PostDetail {
+  id: number;
+  title: string;
+  content: string;
+  boardCategory: string;
+  imageUrl: string;
+  createdAt: string;
+}
+
+export interface PostListRequest {
+  page: number;
+  size: number;
+}
+
+export type PostListResponse = PageResponse<PostListItem>;
