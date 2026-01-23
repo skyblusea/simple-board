@@ -4,7 +4,7 @@ import { ProtectedRouter } from "@/components/auth/ProtectedRouter";
 import { RootLayout } from "@/components/layout/RootLayout";
 import { HomePage } from "@/pages/home";
 import { LoginPage } from "@/pages/login/LoginPage";
-import { SignUpPage } from "@/pages/signup/SignUpPage";
+import { SignupPage } from "@/pages/signup/Page";
 
 export const routes = createBrowserRouter([
   {
@@ -17,7 +17,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: "/signup",
-        Component: SignUpPage,
+        Component: SignupPage,
       },
       {
         path: "/",

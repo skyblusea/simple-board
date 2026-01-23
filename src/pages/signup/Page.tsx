@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 
 import { signupSchema } from "./_schema";
 
-export function SignUpPage() {
+export function SignupPage() {
   const {
     handleSubmit,
     register,
