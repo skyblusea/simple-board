@@ -3,9 +3,8 @@ import { Link, useNavigate } from "react-router";
 import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth/hooks";
-
-import { Button } from "../ui/button";
 
 export function Header() {
   const { user, logout } = useAuth();
