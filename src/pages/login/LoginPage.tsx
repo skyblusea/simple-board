@@ -1,15 +1,22 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
+import { toast } from "sonner";
 
 import { Button, LinkButton } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/auth/hooks";
 
 import { type LoginFormData, loginSchema } from "./_schema";
 
 export function LoginPage() {
+  const navigate = useNavigate();
+  const { signin } = useAuth();
+
   const {
     handleSubmit,
     register,
@@ -18,7 +25,20 @@ export function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const handleLogin = handleSubmit((data) => {});
+  const handleLogin = handleSubmit(async (data) => {
+    try {
+      await signin(data);
+      toast.success("로그인에 성공하였습니다.");
+      navigate("/");
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const message = error.response?.data?.message || "로그인에 실패했습니다.";
+        toast.error(message);
+      } else {
+        toast.error("알 수 없는 오류가 발생했습니다.");
+      }
+    }
+  });
 
   return (
     <div className="flex flex-1 items-center justify-center p-4">
