@@ -24,3 +24,14 @@ export interface PostListRequestParams {
 }
 
 export type PostListResponse = PageResponse<PostListItem>;
+
+export interface PostPayload {
+  title: string;
+  content: string;
+  category: string;
+}
+
+export type PostFormData = {
+  request: PostPayload;
+  file?: File;
+};

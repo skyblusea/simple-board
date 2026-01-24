@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router";
 import { ProtectedRouter } from "@/components/auth/ProtectedRouter";
 import { RootLayout } from "@/components/layout/RootLayout";
 import { LoginPage } from "@/pages/login/LoginPage";
+import { PostCreatePage } from "@/pages/post/create/PostCreatePage";
 import { PostDetailPage } from "@/pages/post/detail/PostDetailPage";
 import { PostListPage } from "@/pages/post/list/PostListPage";
 import { SignupPage } from "@/pages/signup/Page";
@@ -31,6 +32,10 @@ export const routes = createBrowserRouter([
           {
             path: ":id",
             Component: PostDetailPage,
+          },
+          {
+            path: "new",
+            Component: PostCreatePage,
           },
         ],
       },
