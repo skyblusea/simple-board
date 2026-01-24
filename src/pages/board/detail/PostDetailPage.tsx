@@ -51,22 +51,20 @@ function PageComponent() {
       titleAction={<PostActions onDelete={handleDelete} onEdit={handleEdit} />}
     >
       {/* 게시글 정보 */}
-      <div className="border-border border-b px-4 py-6">
+      <div className="border-border space-y-2 border-b px-4 py-6">
         <Badge variant="secondary">{post.boardCategory}</Badge>
         <Typography variant="title3" as="h1" className="mb-4 leading-relaxed">
           {post.title}
         </Typography>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Typography variant="caption1" className="text-muted-foreground">
-              {dayjs(post.createdAt).format("YYYY.MM.DD")}
-            </Typography>
-          </div>
+        <div className="flex items-center gap-3">
+          <Typography variant="caption1" className="text-muted-foreground">
+            {dayjs(post.createdAt).format("YYYY.MM.DD")}
+          </Typography>
         </div>
       </div>
 
       {/* 게시글 본문 */}
-      <div className="border-border border-b px-4 py-6">
+      <div className="border-border space-y-4 border-b px-4 py-6">
         {post.imageUrl && <LazyImage src={post.imageUrl} alt="post-image" />}
         <Typography variant="body1Reading" className="whitespace-pre-wrap">
           {post.content}
