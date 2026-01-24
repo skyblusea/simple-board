@@ -10,6 +10,7 @@ import { withAsyncBoundary } from "@/components/hoc/withAsyncBoundary";
 import { Page } from "@/components/layout/Page";
 import { Badge } from "@/components/ui/badge";
 import { LinkButton } from "@/components/ui/button";
+import { LazyImage } from "@/components/ui/lazy-image";
 import { PostActions } from "@/components/ui/post-actions";
 import { Typography } from "@/components/ui/typography";
 import { BOARD_ROOT_KEY, boardQueries, mutations } from "@/services/board";
@@ -66,7 +67,7 @@ function PageComponent() {
 
       {/* 게시글 본문 */}
       <div className="border-border border-b px-4 py-6">
-        {post.imageUrl && <img className="mb-4 w-full" src={post.imageUrl} />}
+        {post.imageUrl && <LazyImage src={post.imageUrl} alt="post-image" />}
         <Typography variant="body1Reading" className="whitespace-pre-wrap">
           {post.content}
         </Typography>
