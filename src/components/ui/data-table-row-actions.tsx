@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 
-import { type Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "./button";
 import {
@@ -14,13 +13,12 @@ import {
 } from "./dropdown-menu";
 import { Popconfirm } from "./popconfirm";
 
-interface DataTableRowActionsProps<TData> {
-  row: Row<TData>;
+interface DataTableRowActionsProps {
   onEdit: () => void;
   onDelete: () => void;
 }
 
-export function DataTableRowActions<TData>({ onEdit, onDelete }: DataTableRowActionsProps<TData>) {
+export function DataTableRowActions({ onEdit, onDelete }: DataTableRowActionsProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const handleOpenPopconfirm = () => setShowDeleteDialog(true);
 
@@ -40,9 +38,13 @@ export function DataTableRowActions<TData>({ onEdit, onDelete }: DataTableRowAct
             </Button>
           }
         ></DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem onClick={onEdit}>수정</DropdownMenuItem>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={onEdit}>
+            <Pencil className="mr-2 h-4 w-4" />
+            수정
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={handleOpenPopconfirm} variant="destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
             삭제
           </DropdownMenuItem>
         </DropdownMenuContent>
