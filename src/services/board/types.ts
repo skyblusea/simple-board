@@ -18,7 +18,7 @@ export interface PostDetail {
   createdAt: string;
 }
 
-export interface PostListRequest {
+export interface PostListRequestParams {
   page: number;
   size: number;
 }
