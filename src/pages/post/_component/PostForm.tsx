@@ -18,12 +18,18 @@ import { postQueries } from "@/services/post";
 
 import { usePostFormContext } from "../_hooks/usePostFormContext";
 
-export function PostForm() {
+interface PostFormProps {
+  defPreview?: string;
+}
+
+export function PostForm({ defPreview }: PostFormProps) {
   const { register, setValue, control } = usePostFormContext();
 
   const { data: categories } = useSuspenseQuery(postQueries.categories());
 
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(
+    defPreview ? `${import.meta.env.VITE_API_BASE_URL}${defPreview}` : null,
+  );
 
   const handleFile = (file: File) => {
     const previewUrl = URL.createObjectURL(file);
