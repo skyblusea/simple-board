@@ -8,14 +8,14 @@ import { ChevronRight, Loader2, PenSquare, StickyNote } from "lucide-react";
 import { Page } from "@/components/layout/Page";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
-import { boardQueries } from "@/services/post";
+import { postQueries } from "@/services/post";
 
 export function PostListPage() {
   const navigate = useNavigate();
   const observerRef = useRef<HTMLDivElement>(null);
 
   const { data, isFetching, isLoading, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    boardQueries.infiniteList(),
+    postQueries.infiniteList(),
   );
   const posts = data?.pages.flatMap((ele) => ele.content);
 

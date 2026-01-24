@@ -13,7 +13,7 @@ import { LinkButton } from "@/components/ui/button";
 import { LazyImage } from "@/components/ui/lazy-image";
 import { PostActions } from "@/components/ui/post-actions";
 import { Typography } from "@/components/ui/typography";
-import { POST_ROOT_KEY, boardQueries, mutations } from "@/services/post";
+import { POST_ROOT_KEY, postMutations, postQueries } from "@/services/post";
 
 import { PageSkeleton } from "./PageSkeleton";
 
@@ -25,10 +25,10 @@ function PageComponent() {
 
   const queryClient = useQueryClient();
 
-  const { data: post } = useSuspenseQuery(boardQueries.detail(id));
+  const { data: post } = useSuspenseQuery(postQueries.detail(id));
 
   const deleteMutation = useMutation({
-    ...mutations.delete(id),
+    ...postMutations.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [POST_ROOT_KEY] });
       navigate("/");
@@ -65,7 +65,12 @@ function PageComponent() {
 
       {/* 게시글 본문 */}
       <div className="border-border space-y-4 border-b px-4 py-6">
-        {post.imageUrl && <LazyImage src={post.imageUrl} alt="post-image" />}
+        {post.imageUrl && (
+          <LazyImage
+            src={`${import.meta.env.VITE_API_BASE_URL}${post.imageUrl}`}
+            alt="post-image"
+          />
+        )}
         <Typography variant="body1Reading" className="whitespace-pre-wrap">
           {post.content}
         </Typography>
