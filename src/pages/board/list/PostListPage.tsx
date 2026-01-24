@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { ChevronRight, PenSquare } from "lucide-react";
 
+import { Page } from "@/components/layout/Page";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 
@@ -18,14 +19,15 @@ export function PostListPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
-      <div className="flex items-center justify-between border-b-1 border-black px-4 py-4">
-        <Typography variant="title2">게시글 목록</Typography>
+    <Page
+      title="게시글 목록"
+      titleAction={
         <Button onClick={handleCreateClick}>
           <PenSquare className="mr-2 h-4 w-4" />
           글쓰기
         </Button>
-      </div>
+      }
+    >
       {/* 게시판 목록 */}
       <div className="divide-border divide-y">
         {posts?.map((item) => (
@@ -54,6 +56,6 @@ export function PostListPage() {
           </Link>
         ))}
       </div>
-    </div>
+    </Page>
   );
 }
