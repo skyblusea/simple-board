@@ -2,7 +2,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
 export function wrapWithTypeSafety(axiosClient: AxiosInstance) {
   return {
-    get: async <RQ, RS>(url: string, config?: AxiosRequestConfig<RQ>) => {
+    get: async <RS, RQ = unknown>(url: string, config?: AxiosRequestConfig<RQ>) => {
       return axiosClient.get<RQ, AxiosResponse<RS, RQ>, RQ>(url, {
         ...config,
       });
