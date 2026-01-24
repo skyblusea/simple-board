@@ -8,7 +8,6 @@ import { Typography } from "@/components/ui/typography";
 
 export interface PageHeaderProps {
   title?: string;
-  description?: string;
   titleAction?: ReactNode;
   showBackButton?: boolean;
   backTo?: string;
@@ -16,7 +15,6 @@ export interface PageHeaderProps {
 
 export function PageHeader({
   title,
-  description,
   titleAction,
   showBackButton = false,
   backTo,
@@ -42,9 +40,9 @@ export function PageHeader({
           <ChevronLeft className="size-8" strokeWidth={1.5} />
         </Button>
       )}
-      {(title || description) && (
+      {title && (
         <div className="flex flex-col gap-1">
-          {title && <Typography variant="title2">{title}</Typography>}
+          <Typography variant="title2">{title}</Typography>
         </div>
       )}
       {titleAction}

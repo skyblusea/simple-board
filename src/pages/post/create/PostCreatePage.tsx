@@ -20,12 +20,7 @@ export function PostCreatePage() {
 
   return (
     <FormProvider {...methods}>
-      <Page
-        title="게시글 작성"
-        description="게시글을 작성해주세요."
-        titleAction={<PostCreateButton />}
-        showBackButton={true}
-      >
+      <Page title="게시글 작성" titleAction={<PostCreateButton />} showBackButton={true}>
         <PostForm />
       </Page>
     </FormProvider>

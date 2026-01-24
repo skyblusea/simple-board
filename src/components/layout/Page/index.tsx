@@ -6,7 +6,6 @@ interface PageProps extends PageHeaderProps {}
 
 export function PageComponent({
   title,
-  description,
   titleAction,
   children,
   backTo,
@@ -14,11 +13,10 @@ export function PageComponent({
 }: PropsWithChildren<PageProps>) {
   return (
     <div className="mx-auto w-full max-w-2xl">
-      {(title || description || titleAction || showBackButton) && (
+      {(title || titleAction || showBackButton) && (
         <PageHeader
           showBackButton={showBackButton}
           title={title}
-          description={description}
           titleAction={titleAction}
           backTo={backTo}
         />
