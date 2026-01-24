@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { postMutations } from "@/services/post";
+import { POST_ROOT_KEY, postMutations } from "@/services/post";
 
 import { usePostFormContext } from "../_hooks/usePostFormContext";
 
@@ -12,6 +12,7 @@ export function PostCreateButton() {
   const navigate = useNavigate();
   const { handleSubmit } = usePostFormContext();
 
+  const queryClient = useQueryClient();
   const { mutate: createPost, isPending } = useMutation({
     ...postMutations.create(),
     onMutate: () => {
@@ -19,6 +20,7 @@ export function PostCreateButton() {
     },
     onSuccess: (_, __, context) => {
       toast.success("게시글 생성에 성공하였습니다.", { id: context?.toastId });
+      queryClient.invalidateQueries({ queryKey: [POST_ROOT_KEY] });
       navigate(-1);
     },
     onError: (_, __, context) => {
