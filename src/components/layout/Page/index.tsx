@@ -1,10 +1,10 @@
 import type { PropsWithChildren } from "react";
 
-import { PageHeader, type PageHeaderProps } from "./Header";
+import { PageHeader, type PageHeaderProps } from "./PageHeader";
 
 interface PageProps extends PageHeaderProps {}
 
-export function Page({
+export function PageComponent({
   title,
   description,
   titleAction,
@@ -27,3 +27,7 @@ export function Page({
     </div>
   );
 }
+
+export const Page = Object.assign(PageComponent, {
+  Header: PageHeader,
+});
