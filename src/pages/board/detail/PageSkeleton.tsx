@@ -19,20 +19,6 @@ export function PageSkeleton() {
         <Skeleton className="h-4 w-2/3" />
       </div>
 
-      {/* 하단 네비게이션 */}
-      <div className="px-4 py-4">
-        <div className="divide-border flex flex-col divide-y">
-          <div className="flex items-center gap-3 py-3">
-            <Skeleton className="size-4" />
-            <Skeleton className="h-4 w-40" />
-          </div>
-          <div className="flex items-center gap-3 py-3">
-            <Skeleton className="size-4" />
-            <Skeleton className="h-4 w-40" />
-          </div>
-        </div>
-      </div>
-
       {/* 목록 버튼 */}
       <Button variant="outline" className="w-full bg-transparent">
         목록으로
