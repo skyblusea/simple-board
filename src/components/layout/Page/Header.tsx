@@ -31,15 +31,16 @@ export function PageHeader({
   };
 
   return (
-    <div className="flex items-center justify-between border-b-1 border-black px-4 py-4">
+    <div className="flex min-h-[80px] items-center justify-between border-b-1 border-black px-4 py-4">
       {showBackButton && (
         <Button
           variant="ghost"
           onClick={handleBack}
-          render={<ChevronLeft strokeWidth={1.3} />}
           size="icon"
           className="text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
-        ></Button>
+        >
+          <ChevronLeft className="size-8" strokeWidth={1.5} />
+        </Button>
       )}
       {(title || description) && (
         <div className="flex flex-col gap-1">
