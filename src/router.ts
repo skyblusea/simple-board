@@ -5,6 +5,7 @@ import { RootLayout } from "@/components/layout/RootLayout";
 import { LoginPage } from "@/pages/login/LoginPage";
 import { PostCreatePage } from "@/pages/post/create/PostCreatePage";
 import { PostDetailPage } from "@/pages/post/detail/PostDetailPage";
+import { PostEditPage } from "@/pages/post/edit/PostEditPage";
 import { PostListPage } from "@/pages/post/list/PostListPage";
 import { SignupPage } from "@/pages/signup/Page";
 
@@ -36,6 +37,10 @@ export const routes = createBrowserRouter([
           {
             path: "new",
             Component: PostCreatePage,
+          },
+          {
+            path: "edit/:id",
+            Component: PostEditPage,
           },
         ],
       },

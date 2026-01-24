@@ -45,6 +45,19 @@ export const postService = {
     const res = await http.get<CategoriesResponse>(API_URL.category);
     return res.data;
   },
+  editPost: (id: string, data: PostFormData) => {
+    const formData = new FormData();
+    formData.append(
+      "request",
+      new Blob([JSON.stringify(data.request)], { type: "application/json" }),
+    );
+    if (data.file) {
+      formData.append("file", data.file);
+    }
+    return http.patch(`/boards/${id}`, formData, {
+      headers: headerConfigs.multipart,
+    });
+  },
 };
 
 export const postQueries = {
@@ -80,5 +93,10 @@ export const postMutations = {
     mutationOptions({
       mutationKey: [POST_ROOT_KEY, "create"],
       mutationFn: (data: PostFormData) => postService.createPost(data),
+    }),
+  edit: (id: string) =>
+    mutationOptions({
+      mutationKey: [POST_ROOT_KEY, id, "edit"],
+      mutationFn: (data: PostFormData) => postService.editPost(id, data),
     }),
 };
