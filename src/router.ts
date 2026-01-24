@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router";
 
 import { ProtectedRouter } from "@/components/auth/ProtectedRouter";
 import { RootLayout } from "@/components/layout/RootLayout";
-import { HomePage } from "@/pages/home";
+import { PostListPage } from "@/pages/board/list/PostListPage";
 import { LoginPage } from "@/pages/login/LoginPage";
 import { SignupPage } from "@/pages/signup/Page";
 
@@ -25,7 +25,7 @@ export const routes = createBrowserRouter([
         children: [
           {
             index: true,
-            Component: HomePage,
+            Component: PostListPage,
           },
         ],
       },
