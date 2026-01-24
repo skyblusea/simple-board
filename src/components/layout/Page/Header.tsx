@@ -11,6 +11,7 @@ export interface PageHeaderProps {
   description?: string;
   titleAction?: ReactNode;
   showBackButton?: boolean;
+  backTo?: string;
 }
 
 export function PageHeader({
@@ -18,9 +19,16 @@ export function PageHeader({
   description,
   titleAction,
   showBackButton = false,
+  backTo,
 }: PropsWithChildren<PageHeaderProps>) {
   const navigate = useNavigate();
-  const handleBack = () => navigate(-1);
+  const handleBack = () => {
+    if (backTo) {
+      navigate(backTo);
+    } else {
+      navigate(-1);
+    }
+  };
 
   return (
     <div className="flex items-center justify-between border-b-1 border-black px-4 py-4">

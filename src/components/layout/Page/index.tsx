@@ -9,6 +9,7 @@ export function Page({
   description,
   titleAction,
   children,
+  backTo,
   showBackButton = false,
 }: PropsWithChildren<PageProps>) {
   return (
@@ -19,6 +20,7 @@ export function Page({
           title={title}
           description={description}
           titleAction={titleAction}
+          backTo={backTo}
         />
       )}
       {children}
