@@ -1,130 +1,59 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
-import type { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { PenSquare } from "lucide-react";
+import { ChevronRight, PenSquare } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
-import { DataTableRowActions } from "@/components/ui/data-table-row-actions";
-import type { PostListItem } from "@/services/board/types";
+import { Typography } from "@/components/ui/typography";
 
-export default function PostListPage() {
-  const posts = [
-    {
-      id: 5,
-      title: "공지1",
-      category: "NOTICE",
-      createdAt: "2024-11-11T09:29:45.721114",
-    },
-    {
-      id: 6,
-      title: "공지2",
-      category: "NOTICE",
-      createdAt: "2024-11-11T09:42:12.11129",
-    },
-    {
-      id: 12,
-      title: "공지3",
-      category: "NOTICE",
-      createdAt: "2024-11-13T09:13:07.432346",
-    },
-    {
-      id: 13,
-      title: "공지4",
-      category: "NOTICE",
-      createdAt: "2024-11-13T09:13:34.721977",
-    },
-    {
-      id: 15,
-      title: "공지5",
-      category: "NOTICE",
-      createdAt: "2024-11-13T10:41:39.424863",
-    },
-    {
-      id: 16,
-      title: "공지6",
-      category: "NOTICE",
-      createdAt: "2024-11-13T10:43:26.716577",
-    },
-    {
-      id: 17,
-      title: "공지7",
-      category: "NOTICE",
-      createdAt: "2024-11-13T10:45:15.267487",
-    },
-    {
-      id: 18,
-      title: "공지8",
-      category: "NOTICE",
-      createdAt: "2024-11-13T10:46:29.278927",
-    },
-  ] as PostListItem[];
+import { mock } from "./dummy";
 
+export function PostListPage() {
   const navigate = useNavigate();
 
+  const posts = mock.content;
+
   const handleCreateClick = () => {
-    navigate("/board/new");
+    navigate("/new");
   };
 
-  const columns: ColumnDef<PostListItem>[] = [
-    {
-      accessorKey: "id",
-      header: "번호",
-      size: 20,
-      cell: ({ row }) => <div className="text-center">{row.getValue("id")}</div>,
-    },
-    {
-      accessorKey: "title",
-      header: "제목",
-      cell: ({ row }) => (
-        <div className="flex gap-2">
-          <Badge variant="outline">{row.original.category}</Badge>
-          <span className="max-w-[500px] truncate font-medium">{row.getValue("title")}</span>
-        </div>
-      ),
-    },
-    {
-      accessorKey: "createdAt",
-      header: "작성일",
-      cell: ({ row }) => (
-        <div className="text-center">{dayjs(row.getValue("createdAt")).format("YYYY-MM-DD")}</div>
-      ),
-      size: 50,
-    },
-    {
-      id: "actions",
-      cell: ({ row }) => <DataTableRowActions onDelete={() => {}} onEdit={() => {}} row={row} />,
-      size: 20,
-    },
-  ];
-
-  const [pagination, setPagination] = useState({
-    pageIndex: 0, //initial page index
-    pageSize: 10, //default page size
-  });
-
   return (
-    <>
-      <div className="container mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-4 flex justify-end">
-          <Button onClick={handleCreateClick}>
-            <PenSquare className="mr-2 h-4 w-4" />
-            글쓰기
-          </Button>
-        </div>
-        <DataTable
-          data={posts}
-          columns={columns}
-          pagination={{
-            ...pagination,
-            total: 200,
-          }}
-          onPaginationChange={setPagination}
-        />
+    <div className="mx-auto w-full max-w-2xl">
+      <div className="flex items-center justify-between border-b-1 border-black px-4 py-4">
+        <Typography variant="title2">게시글 목록</Typography>
+        <Button onClick={handleCreateClick}>
+          <PenSquare className="mr-2 h-4 w-4" />
+          글쓰기
+        </Button>
       </div>
-    </>
+      {/* 게시판 목록 */}
+      <div className="divide-border divide-y">
+        {posts?.map((item) => (
+          <Link
+            key={item.id}
+            to={`${item.id}`}
+            className="hover:bg-muted/50 flex cursor-pointer items-center justify-between px-4 py-5 transition-colors"
+          >
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <Typography variant="body1Normal">{item.title}</Typography>
+              </div>
+              <div className="flex items-center gap-2">
+                <Typography variant="caption1" className="text-muted-foreground">
+                  {item.category}
+                </Typography>
+                <Typography variant="caption1" className="text-muted-foreground">
+                  ·
+                </Typography>
+                <Typography variant="caption1" className="text-muted-foreground">
+                  {dayjs(item.createdAt).format("YYYY.MM.DD")}
+                </Typography>
+              </div>
+            </div>
+            <ChevronRight className="text-muted-foreground h-5 w-5 flex-shrink-0" />
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }
