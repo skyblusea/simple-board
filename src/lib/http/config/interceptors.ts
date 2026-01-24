@@ -47,9 +47,6 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
           window.location.href = "/login";
           return Promise.reject(refreshError);
         }
-      } else {
-        setAccessToken(null);
-        window.location.href = "/login";
       }
       return Promise.reject(error);
     },
