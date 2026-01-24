@@ -1,30 +1,53 @@
 "use client";
 
-import { useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import { toast } from "sonner";
 
+import { withAsyncBoundary } from "@/components/hoc/withAsyncBoundary";
 import { Page } from "@/components/layout/Page";
 import { Badge } from "@/components/ui/badge";
 import { LinkButton } from "@/components/ui/button";
 import { PostActions } from "@/components/ui/post-actions";
 import { Typography } from "@/components/ui/typography";
+import { BOARD_ROOT_KEY, boardQueries, mutations } from "@/services/board";
 
-import { PostNavigation } from "./_components/PostNavigation";
-import { mock } from "./mock";
+import { PageSkeleton } from "./PageSkeleton";
 
-export function PostDetailPage() {
-  const post = mock;
+function PageComponent() {
   const navigate = useNavigate();
   const params = useParams();
   const id = params?.id;
+  if (!id) throw new Error();
+
+  const queryClient = useQueryClient();
+
+  const { data: post } = useSuspenseQuery(boardQueries.detail(id));
+
+  const deleteMutation = useMutation({
+    ...mutations.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [BOARD_ROOT_KEY] });
+      navigate("/");
+    },
+  });
+
   const handleEdit = () => navigate(`/edit/${id}`);
+  const handleDelete = () => {
+    toast.promise(deleteMutation.mutateAsync(), {
+      loading: "삭제 중...",
+      success: "게시글이 삭제되었습니다.",
+      error: "게시글 삭제에 실패했습니다.",
+    });
+  };
 
   return (
     <Page
       showBackButton={true}
       backTo="/"
-      titleAction={<PostActions onDelete={() => {}} onEdit={handleEdit} />}
+      titleAction={<PostActions onDelete={handleDelete} onEdit={handleEdit} />}
     >
       {/* 게시글 정보 */}
       <div className="border-border border-b px-4 py-6">
@@ -49,14 +72,6 @@ export function PostDetailPage() {
         </Typography>
       </div>
 
-      {/* 하단 네비게이션 */}
-      <div className="px-4 py-4">
-        <div className="divide-border flex flex-col divide-y">
-          <PostNavigation to="/2" type="prev" title="서비스 정기 점검 안내" />
-          <PostNavigation to="/3" type="next" title="봄맞이 이벤트 진행 중" />
-        </div>
-      </div>
-
       {/* 목록 버튼 */}
       <LinkButton to="/" variant="outline" className="w-full bg-transparent">
         목록으로
@@ -64,3 +79,9 @@ export function PostDetailPage() {
     </Page>
   );
 }
+
+export const PostDetailPage = withAsyncBoundary(PageComponent, {
+  onError: () => toast.error("게시글을 불러오는데 실패하였습니다."),
+  fallbackError: <Navigate to="/" />,
+  fallbackLoading: <PageSkeleton />,
+});
