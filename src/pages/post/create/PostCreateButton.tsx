@@ -21,7 +21,7 @@ export function PostCreateButton() {
     onSuccess: (_, __, context) => {
       toast.success("게시글 생성에 성공하였습니다.", { id: context?.toastId });
       queryClient.invalidateQueries({ queryKey: [POST_ROOT_KEY] });
-      navigate(-1);
+      navigate("/");
     },
     onError: (_, __, context) => {
       toast.error("게시글 생성에 실패하였습니다.", { id: context?.toastId });
