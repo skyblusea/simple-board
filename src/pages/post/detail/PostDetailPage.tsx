@@ -13,7 +13,7 @@ import { LinkButton } from "@/components/ui/button";
 import { LazyImage } from "@/components/ui/lazy-image";
 import { PostActions } from "@/components/ui/post-actions";
 import { Typography } from "@/components/ui/typography";
-import { BOARD_ROOT_KEY, boardQueries, mutations } from "@/services/board";
+import { POST_ROOT_KEY, boardQueries, mutations } from "@/services/post";
 
 import { PageSkeleton } from "./PageSkeleton";
 
@@ -30,7 +30,7 @@ function PageComponent() {
   const deleteMutation = useMutation({
     ...mutations.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [BOARD_ROOT_KEY] });
+      queryClient.invalidateQueries({ queryKey: [POST_ROOT_KEY] });
       navigate("/");
     },
   });

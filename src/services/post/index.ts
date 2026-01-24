@@ -4,36 +4,37 @@ import { http } from "@/lib/http";
 
 import type { PostDetail, PostListRequestParams, PostListResponse } from "./types";
 
-const BOARD_API_URL = {
+const API_URL = {
   list: "/boards",
   category: "/boards/categories",
 };
 
-export const BOARD_ROOT_KEY = "BOARDS";
+export const POST_ROOT_KEY = "POSTS";
 
-export const boardService = {
-  getBoards: ({ page, size }: PostListRequestParams) =>
-    http.get<PostListResponse>(BOARD_API_URL.list, {
+export const postService = {
+  getPosts: ({ page, size }: PostListRequestParams) =>
+    http.get<PostListResponse>(API_URL.list, {
       params: { page, size },
     }),
-  getBoard: async (id: string) => {
+  getPost: async (id: string) => {
     const res = await http.get<PostDetail>(`/boards/${id}`);
     return res.data;
   },
-  deleteBoard: (id: string) => http.delete(`/boards/${id}`),
+  deletePost: (id: string) => http.delete(`/boards/${id}`),
+  create,
 };
 
 export const boardQueries = {
   detail: (id: string) =>
     queryOptions({
-      queryKey: [BOARD_ROOT_KEY, "detail", id],
-      queryFn: () => boardService.getBoard(id),
+      queryKey: [POST_ROOT_KEY, "detail", id],
+      queryFn: () => postService.getPost(id),
     }),
   infiniteList: (size = 10) =>
     infiniteQueryOptions({
-      queryKey: [BOARD_ROOT_KEY, "list", size],
+      queryKey: [POST_ROOT_KEY, "list", size],
       queryFn: async ({ pageParam }) => {
-        const response = await boardService.getBoards({ page: pageParam, size });
+        const response = await postService.getPosts({ page: pageParam, size });
         return response.data;
       },
       initialPageParam: 0,
@@ -44,7 +45,7 @@ export const boardQueries = {
 export const mutations = {
   delete: (id: string) =>
     mutationOptions({
-      mutationKey: [BOARD_ROOT_KEY, id, "delete"],
-      mutationFn: () => boardService.deleteBoard(id),
+      mutationKey: [POST_ROOT_KEY, id, "delete"],
+      mutationFn: () => postService.deletePost(id),
     }),
 };
