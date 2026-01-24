@@ -13,12 +13,12 @@ import {
 } from "./dropdown-menu";
 import { Popconfirm } from "./popconfirm";
 
-interface DataTableRowActionsProps {
+interface PostActionsProps {
   onEdit: () => void;
   onDelete: () => void;
 }
 
-export function DataTableRowActions({ onEdit, onDelete }: DataTableRowActionsProps) {
+export function PostActions({ onEdit, onDelete }: PostActionsProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const handleOpenPopconfirm = () => setShowDeleteDialog(true);
 
