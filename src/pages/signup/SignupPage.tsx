@@ -15,7 +15,7 @@ import { type SignupFormData, signupSchema } from "./_schema";
 
 export function SignupPage() {
   const navigate = useNavigate();
-  const { signup } = useAuth();
+  const { signup, isSigningUp } = useAuth();
 
   const {
     handleSubmit,
@@ -85,8 +85,8 @@ export function SignupPage() {
             </Field>
           </CardContent>
           <CardFooter className="mt-7 flex flex-col space-y-2">
-            <Button type="submit" className="w-full">
-              회원가입
+            <Button type="submit" className="w-full" disabled={isSigningUp}>
+              {isSigningUp ? "가입 중..." : "회원가입"}
             </Button>
             <div className="text-muted-foreground flex items-center justify-center text-center text-sm">
               이미 계정이 있으신가요?

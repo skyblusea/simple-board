@@ -15,7 +15,7 @@ import { type LoginFormData, loginSchema } from "./_schema";
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { signin } = useAuth();
+  const { signin, isSigningIn } = useAuth();
 
   const {
     handleSubmit,
@@ -66,8 +66,8 @@ export function LoginPage() {
             </Field>
           </CardContent>
           <CardFooter className="mt-7 flex flex-col space-y-2">
-            <Button type="submit" className="w-full">
-              로그인
+            <Button type="submit" className="w-full" disabled={isSigningIn}>
+              {isSigningIn ? "로그인 중..." : "로그인"}
             </Button>
             <div className="text-muted-foreground flex items-center justify-center text-center text-sm">
               아직 회원이 아니신가요?
