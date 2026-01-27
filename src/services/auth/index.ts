@@ -36,9 +36,12 @@ export const authService = {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     if (!refreshToken) throw new Error("리프레시 토큰이 존재하지 않습니다.");
 
-    const response = await axios.post<AuthResponse>("/auth/refresh", {
-      refreshToken,
-    });
+    const response = await axios.post<AuthResponse>(
+      `${import.meta.env.VITE_API_BASE_URL}/auth/refresh`,
+      {
+        refreshToken,
+      },
+    );
 
     setAccessToken(response.data.accessToken);
     localStorage.setItem(REFRESH_TOKEN_KEY, response.data.refreshToken);
