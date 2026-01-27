@@ -1,10 +1,11 @@
 import { mutationOptions } from "@tanstack/react-query";
+import axios from "axios";
 
 import { REFRESH_TOKEN_KEY } from "@/constants/auth";
 import { http } from "@/lib/http";
 import { setAccessToken } from "@/lib/tokenStorage";
 
-import type { AuthResponse, RefreshTokenRequest, SigninRequest, SignupRequest } from "./types";
+import type { AuthResponse, SigninRequest, SignupRequest } from "./types";
 
 export const AUTH_API_URL = {
   signup: "auth/signup",
@@ -35,7 +36,7 @@ export const authService = {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     if (!refreshToken) throw new Error("리프레시 토큰이 존재하지 않습니다.");
 
-    const response = await http.post<RefreshTokenRequest, AuthResponse>("/auth/refresh", {
+    const response = await axios.post<AuthResponse>("/auth/refresh", {
       refreshToken,
     });
 
