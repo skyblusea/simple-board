@@ -11,31 +11,35 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/auth/hooks";
 
-import { type LoginFormData, loginSchema } from "./_schema";
+import { type SignupFormData, signupSchema } from "./_schema";
 
-export function LoginPage() {
+export function SignupPage() {
   const navigate = useNavigate();
-  const { signin, isSigningIn } = useAuth();
+  const { signup, isSigningUp } = useAuth();
 
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
   });
 
-  const handleLogin = handleSubmit(async (data) => {
+  const handleSignup = handleSubmit(async (data) => {
     try {
-      await signin(data);
-      toast.success("로그인에 성공하였습니다.");
-      navigate("/");
+      await signup(data);
+      toast.success("회원가입에 성공했습니다.");
+      navigate("/login");
     } catch (error) {
       if (isAxiosError(error)) {
-        const message = error.response?.data?.message || "로그인에 실패했습니다.";
+        let message = "회원가입에 실패했습니다.\n";
+        const errorData = error.response?.data;
+        if (errorData instanceof Object) {
+          message += Object.values(errorData)
+            .flatMap((value) => (typeof value === "string" ? [value] : value))
+            .join("\n");
+        }
         toast.error(message);
-      } else {
-        toast.error("알 수 없는 오류가 발생했습니다.");
       }
     }
   });
@@ -43,7 +47,7 @@ export function LoginPage() {
   return (
     <div className="flex flex-1 items-center justify-center p-4">
       <Card className="w-full max-w-md">
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSignup}>
           <CardContent>
             <Field>
               <FieldLabel htmlFor="username">이메일 아이디</FieldLabel>
@@ -59,20 +63,35 @@ export function LoginPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="비밀번호를 입력해주세요."
+                placeholder="영문, 숫자, 특수문자(!%*#?&) 조합 8자 이상"
                 {...register("password")}
               />
               <FieldError>{errors.password?.message}</FieldError>
             </Field>
+            <Field>
+              <FieldLabel htmlFor="confirmPassword">비밀번호 확인</FieldLabel>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="비밀번호를 다시 입력해주세요."
+                {...register("confirmPassword")}
+              />
+              <FieldError>{errors.confirmPassword?.message}</FieldError>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="name">이름</FieldLabel>
+              <Input id="name" placeholder="이름을 입력해주세요" {...register("name")} />
+              <FieldError>{errors.name?.message}</FieldError>
+            </Field>
           </CardContent>
           <CardFooter className="mt-7 flex flex-col space-y-2">
-            <Button type="submit" className="w-full" disabled={isSigningIn}>
-              {isSigningIn ? "로그인 중..." : "로그인"}
+            <Button type="submit" className="w-full" disabled={isSigningUp}>
+              {isSigningUp ? "가입 중..." : "회원가입"}
             </Button>
             <div className="text-muted-foreground flex items-center justify-center text-center text-sm">
-              아직 회원이 아니신가요?
-              <LinkButton variant="link" type="button" to="/signup">
-                회원가입
+              이미 계정이 있으신가요?
+              <LinkButton variant="link" type="button" to="/login">
+                로그인
               </LinkButton>
             </div>
           </CardFooter>

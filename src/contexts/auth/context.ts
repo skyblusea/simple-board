@@ -9,6 +9,9 @@ export type AuthContextType = {
   signin: (data: SigninRequest) => Promise<void>;
   logout: () => void;
   signup: (user: SignupRequest) => Promise<void>;
+  isSigningIn: boolean;
+  isSigningUp: boolean;
+  isInitializing: boolean;
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

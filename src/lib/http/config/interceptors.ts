@@ -1,5 +1,6 @@
 import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import axios from "axios";
+import { toast } from "sonner";
 
 import { REFRESH_TOKEN_KEY } from "@/constants/auth";
 import { getAccessToken, setAccessToken } from "@/lib/tokenStorage";
@@ -29,8 +30,30 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
     },
     async (error) => {
       const originalRequest = error.config;
-      if (error.response?.status === 401 && !originalRequest._retry) {
+
+      const isUnauthorized = error.response?.status === 401;
+      const isForbidden = error.response?.status === 403;
+      const hasNotRetried = !originalRequest._retry;
+
+      if (isUnauthorized) {
+        toast.error("접근 권한이 없습니다. 로그인 후 다시 시도해주세요.");
+        setAccessToken(null);
+        window.location.href = "/login";
+        return Promise.reject(error);
+      }
+
+      if (isForbidden && hasNotRetried) {
+        originalRequest._retry = true;
+
         const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+
+        if (!refreshToken) {
+          setAccessToken(null);
+          toast.error("로그인이 만료되었습니다. 다시 로그인해주세요.");
+          window.location.href = "/login";
+          return Promise.reject(error);
+        }
+
         try {
           const { data } = await axios.post(
             `${import.meta.env.VITE_API_BASE_URL}/${AUTH_API_URL.refresh}`,
@@ -42,6 +65,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
           originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return axiosInstance(originalRequest);
         } catch (refreshError) {
+          toast.error("로그인이 만료되었습니다. 다시 로그인해주세요.");
           setAccessToken(null);
           localStorage.removeItem(REFRESH_TOKEN_KEY);
           window.location.href = "/login";

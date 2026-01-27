@@ -1,3 +1,5 @@
+import { mutationOptions } from "@tanstack/react-query";
+
 import { REFRESH_TOKEN_KEY } from "@/constants/auth";
 import { http } from "@/lib/http";
 import { setAccessToken } from "@/lib/tokenStorage";
@@ -9,6 +11,8 @@ export const AUTH_API_URL = {
   signin: "auth/signin",
   refresh: "auth/refresh",
 };
+
+export const AUTH_ROOT_KEY = "AUTH";
 
 export const authService = {
   signup: async (data: SignupRequest) => {
@@ -37,5 +41,19 @@ export const authService = {
 
     setAccessToken(response.data.accessToken);
     localStorage.setItem(REFRESH_TOKEN_KEY, response.data.refreshToken);
+    return response.data;
   },
+};
+
+export const authMutations = {
+  signin: () =>
+    mutationOptions({
+      mutationKey: [AUTH_ROOT_KEY, "signin"],
+      mutationFn: (data: SigninRequest) => authService.signin(data),
+    }),
+  signup: () =>
+    mutationOptions({
+      mutationKey: [AUTH_ROOT_KEY, "signup"],
+      mutationFn: (data: SignupRequest) => authService.signup(data),
+    }),
 };
