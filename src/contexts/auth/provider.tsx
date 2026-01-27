@@ -50,6 +50,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
         if (accessToken) {
           decodeToken(accessToken);
         }
+      } catch (error) {
+        console.error("initAuth error", error);
       } finally {
         setIsInitializing(false);
       }
