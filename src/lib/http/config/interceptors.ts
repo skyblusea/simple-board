@@ -62,6 +62,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
             },
           );
           setAccessToken(data.accessToken);
+          localStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken);
           originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return axiosInstance(originalRequest);
         } catch (refreshError) {
