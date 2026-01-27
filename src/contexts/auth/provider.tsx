@@ -1,8 +1,9 @@
-import { type PropsWithChildren, useState } from "react";
+import { type PropsWithChildren, useEffect, useState } from "react";
 
 import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 
+import { getAccessToken } from "@/lib/tokenStorage";
 import { authMutations, authService } from "@/services/auth";
 import type { SigninRequest, SignupRequest } from "@/services/auth/types";
 import type { User } from "@/types/user";
@@ -11,17 +12,22 @@ import { AuthContext } from "./context";
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const signinMutation = useMutation(authMutations.signin());
   const signupMutation = useMutation(authMutations.signup());
 
-  const signin = async (data: SigninRequest) => {
-    const response = await signinMutation.mutateAsync(data);
-    const decoded = jwtDecode<User>(response.accessToken);
+  const decodeToken = (accessToken: string) => {
+    const decoded = jwtDecode<User>(accessToken);
     setUser({
       username: decoded.username,
       name: decoded.name,
     });
+  };
+
+  const signin = async (data: SigninRequest) => {
+    const response = await signinMutation.mutateAsync(data);
+    decodeToken(response.accessToken);
   };
 
   const logout = () => {
@@ -33,6 +39,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
     await signupMutation.mutateAsync(data);
   };
 
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        let accessToken = getAccessToken();
+        if (!accessToken) {
+          const response = await authService.refresh();
+          accessToken = response.accessToken;
+        }
+        if (accessToken) {
+          decodeToken(accessToken);
+        }
+      } finally {
+        setIsInitializing(false);
+      }
+    };
+    initAuth();
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -43,6 +67,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         signup,
         isSigningIn: signinMutation.isPending,
         isSigningUp: signupMutation.isPending,
+        isInitializing,
       }}
     >
       {children}

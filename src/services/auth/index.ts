@@ -41,6 +41,7 @@ export const authService = {
 
     setAccessToken(response.data.accessToken);
     localStorage.setItem(REFRESH_TOKEN_KEY, response.data.refreshToken);
+    return response.data;
   },
 };
 
